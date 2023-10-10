@@ -1,0 +1,12 @@
+fastapi==0.103.2
+orjson==3.9.7
+pydantic==1.9.0
+uvicorn==0.18.2
+sqlalchemy==2.0.21
+asyncpg==0.26.0 
+alembic==1.12
+python-dotenv==1.0.0
+fastapi_users==12.1.2
+jose==1.0.0
+python-jose[cryptograph]==3.3.0
+passlib[bcrypt]==1.7.4

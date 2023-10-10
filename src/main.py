@@ -1,2 +1,6 @@
-if __name__ == "__main__":
-    pass
+from fastapi import FastAPI
+
+
+app = FastAPI()
+
+app.include_router()
