@@ -8,6 +8,9 @@ class AppSettings(BaseSettings):
     project_name: str = "project_name"
     project_host: str = ...
     project_port: int = ...
+    secret_key: str
+    algorithm: str
+    access_token_expire_minutes: int
     echo: bool = True
     app_title: str
     database_dsn: PostgresDsn
