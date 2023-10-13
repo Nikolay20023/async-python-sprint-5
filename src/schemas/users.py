@@ -1,13 +1,22 @@
 from pydantic import BaseModel
 from typing import Union
+import uuid
 
 
 class User(BaseModel):
     username: str
-    is_active: bool
+
+
+class UserCreate(User):
+    hashed_password: str
+
+
+class UserInfo(User):
+    is_active: bool 
 
 
 class UserInDB(User):
+    id: int
     hashed_password: str
 
 

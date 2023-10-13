@@ -1,10 +1,10 @@
 from datetime import datetime
-from sqlalchemy import String, Column, Boolean, DateTime, Integer
+from sqlalchemy import String, Column, Boolean, DateTime, Integer, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 import uuid
 
-from models.base import Base
+from db.base import Base
 
 
 class User(Base):
@@ -14,7 +14,12 @@ class User(Base):
     username = Column(String(length=128), unique=True, index=True)
     hashed_password = Column(String(128))
     is_active = Column(Boolean, default=True, nullable=False)
-    files = relationship("File", back_populates="user", passive_deletes=True)
+    files = relationship(
+        "File",
+        back_populates="user",
+        passive_deletes=True,
+        foreign_keys=[]
+    )
 
 
 class File(Base):
@@ -25,5 +30,6 @@ class File(Base):
     created_at = Column(DateTime, index=True, default=datetime.utcnow())
     path = Column(String(128))
     size = Column(Integer)
+    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
     is_downloadable = Column(Boolean)
-    author = relationship("User", back_populates="files")
+    user = relationship("User", back_populates="files")
