@@ -4,6 +4,7 @@ import uvicorn
 
 from core.config import app_settings
 from api.v1.users import router_user
+from api.v1.files import router_files
 
 
 app = FastAPI(
@@ -13,9 +14,12 @@ app = FastAPI(
     redoc_url=None
 )
 
-app.include_router(router_user, prefix="/api/v1")
+prefix = "/api/v1"
 
-if __name__ == '__main__':
+app.include_router(router_user, prefix=prefix, tags=["users"])
+app.include_router(router_files, prefix=prefix, tags=['files'])
+
+if __name__ == "__main__":
     uvicorn.run(
         "main:app",
         host=app_settings.project_host,

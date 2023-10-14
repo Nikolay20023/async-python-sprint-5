@@ -13,7 +13,7 @@ from api.v1.utils import verify_password, get_password
 from core.config import app_settings
 
 
-oath2_scheme = OAuth2PasswordBearer(tokenUrl="/auth")
+oath2_scheme = OAuth2PasswordBearer(tokenUrl="api/v1/auth")
 
 router_user = APIRouter()
 
@@ -120,7 +120,7 @@ async def user_auth(
     return {"access_token": access_token, "token_type": "bearer"}
 
 
-@router_user.get("/me", response_model=UserInfo)
+@router_user.get("/me")
 async def get_me(
     current_user: Annotated[UserInfo, Depends(get_current_user)]
 ):

@@ -22,4 +22,5 @@ async def stattus(
     await db.scalar(select(1))
 
     ping_db_duration = time.time() - start
+    
 
