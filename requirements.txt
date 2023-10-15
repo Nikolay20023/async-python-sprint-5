@@ -10,3 +10,5 @@ fastapi_users==12.1.2
 jose==1.0.0
 python-jose[cryptograph]==3.3.0
 passlib[bcrypt]==1.7.4
+fastapi-cache==0.1.0
+aioshutil==1.3
