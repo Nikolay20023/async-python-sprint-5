@@ -41,14 +41,11 @@ async def authenticate_user(
     username: str,
     db: AsyncSession = Depends(get_session),
 ):
-    try:
-        user = await users_crud.get(db=db, username=username)
-    except:
-        raise Exception
     if not verify_password(password, user.hashed_password):
         return {
             "data": "Пароль неверный"
         }
+    user = await users_crud.get(db=db, username=username)
     return user
 
 

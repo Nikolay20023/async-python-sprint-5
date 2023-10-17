@@ -13,19 +13,11 @@ from core.exceptions import (FileNotCreatedError, FileNotFoundHttpError,
 from models.models import User
 from services.entity import files_crud
 from schemas.files import FileInDB, UploadResponse
-# from services.files import
 
 router_files = APIRouter()
 
 
-@router_files.post("/files")
-async def create_files(file: UploadFile = File()):
-    return {
-        "file": file
-    }
-
-
-@router_files.get("/list")
+@router_files.get("/list", description="List file", response_model=FileResponse)
 async def get_files_list(
     db: AsyncSession = Depends(get_session),
     user: User = Depends(get_current_user)
@@ -55,12 +47,3 @@ async def upload_file(
         raise InternalServerErrorHttpError(detail='Не удалось добавить запись о файле')
 
     return UploadResponse(**file_upload)
-# @router_files.get("/upload", status_code=status.HTTP_201_CREATED)
-# async def upload_file(
-#     subdir: str = "",
-#     file: UploadFile = File(),
-#     db: AsyncSession = Depends(get_session),
-#     user: User = Depends(get_current_user)
-# ):
-#     try:
-#         file_upload: dict = await
