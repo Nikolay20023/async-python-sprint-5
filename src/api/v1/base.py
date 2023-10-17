@@ -3,18 +3,19 @@ import logging
 
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
-from fastapi.security import OAuth2PasswordBearer
+import redis.asyncio as redis
 from sqlalchemy.future import select
 
 from db.db import get_session
+from core.config import mem_cache
 
 
 logger = logging.getLogger(__name__)
 
-router = APIRouter()
+router_base = APIRouter()
 
 
-@router.get("/ping")
+@router_base.get("/ping")
 async def stattus(
     db: AsyncSession = Depends(get_session)
 ) -> dict:
@@ -22,5 +23,14 @@ async def stattus(
     await db.scalar(select(1))
 
     ping_db_duration = time.time() - start
+
+    start_time_cache: float = time.time()
+    mem_cache.ping()
+    ping_cahce_durations: float = time.time() - start_time_cache
+
+    return {
+        "db": ping_db_duration,
+        "cache": ping_cahce_durations
+    }
     
 

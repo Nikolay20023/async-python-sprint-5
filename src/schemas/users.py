@@ -3,7 +3,12 @@ from typing import Union
 import uuid
 
 
-class User(BaseModel):
+class ORM(BaseModel):
+    class Config:
+        orm_mode = True
+
+
+class User(ORM):
     username: str
 
 
@@ -22,7 +27,7 @@ class UserInDB(User):
 
 class Token(BaseModel):
     access_token: str
-    token_type: str
+    token_type: str = "Bearer"
 
 
 class TokenData(BaseModel):

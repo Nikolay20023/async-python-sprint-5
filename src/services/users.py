@@ -1,4 +1,4 @@
-from typing import TypeVar, Generic, Type
+from typing import TypeVar, Generic
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.future import select

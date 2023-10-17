@@ -1,7 +1,7 @@
 from datetime import datetime
-from typing import List
-from pydantic import BaseModel, validator
+from typing import Optional
 from uuid import UUID
+from pydantic import BaseModel
 
 
 class ORM(BaseModel):
@@ -10,38 +10,33 @@ class ORM(BaseModel):
 
 
 class FileBase(ORM):
-    id: UUID
     name: str
-    created_at: datetime
+
+
+class FileCreater(FileBase):
+    pass
+
+
+class FileUpload(ORM):
     path: str
-    size: int
+
+
+class FileInDBase(FileBase):
+    id: UUID
+    created_at: datetime
+    path: Optional[str]
+    size: float
     is_downloadable: bool
 
 
-class FileInDB(FileBase):
-
-    @validator('created_at')
-    def datetime_to_str(cls, value):
-        if isinstance(value, str):
-            return datetime.fromisoformat(value)
-        else:
-            return value
+class File(FileInDBase):
+    pass
 
 
-class File(FileBase):
-
-    @validator('created_at', pre=True)
-    def datetime_to_str(cls, value):
-        if isinstance(value, str):
-            return datetime.fromisoformat(value)
-        else:
-            return value
+class FileInDB(FileInDBase):
+    pass
 
 
-class FileList(ORM):
-    account_id: UUID
-    files: List
-
-
-class ObjPath(ORM):
-    path: str
+class UploadResponse(ORM):
+    status: Optional[str] = None
+    size: Optional[str] = None

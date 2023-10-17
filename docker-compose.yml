@@ -1,0 +1,74 @@
+version: "3.9"
+
+services:
+  postgres:
+    container_name: pg_cnt
+    image: postgres:13
+    restart: always
+    env_file:
+      - .pg_env
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - innerNetwork
+    ports:
+      - "5432:5432"
+
+  memcache:
+    container_name: memcahe_cnt
+    image: redis
+    restart: always
+    depends_on:
+      - postgres
+    volumes:
+      - ./cache:/data
+    networks:
+      - innerNetwork
+    ports:
+      - "6379:6379"
+
+  fileserver:
+    container_name: fs_app_cnt
+    image: file_server
+    build:
+      context: .
+    env_file:
+      - .env.dev.sample
+    restart: always
+    command: python3 app.py
+    ports:
+      - "8001:8000"
+    networks:
+      - innerNetwork
+
+  nginx:
+    container_name: nginx_cnt
+    image: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./ngnix/nginx.conf:/etc/nginx/conf.d/default.conf
+    restart: always
+    depends_on:
+      - fileserver
+    networks:
+      - innerNetwork
+
+  pgadmin:
+    container_name: pgadmin_cnt
+    image: dpage/pgadmin4
+    env_file:
+      - .pg_env
+    environment:
+      PGADMIN_LISTEN_PORT: 80
+    ports:
+      - "8088:80"
+    networks:
+      - innerNetwork
+    depends_on:
+      - postgres
+networks:
+  innerNetwork:
+    driver: bridge
+volumes:
+  pgdata:

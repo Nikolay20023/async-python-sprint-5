@@ -18,7 +18,7 @@ oath2_scheme = OAuth2PasswordBearer(tokenUrl="api/v1/auth")
 router_user = APIRouter()
 
 
-@router_user.post("/register", status_code=status.HTTP_201_CREATED)
+@router_user.post("/register", status_code=status.HTTP_201_CREATED, response_model=UserInfo)
 async def user_registration(
     obj_data: UserCreate,
     db: AsyncSession = Depends(get_session)
@@ -33,10 +33,7 @@ async def user_registration(
         return {
             "data": "username уже занет"
         }
-    return {
-        "username": user_db.username,
-        "is_active": user_db.is_active
-    }
+    return UserInfo(**user_db.__dict__)
     
 
 async def authenticate_user(
@@ -117,11 +114,11 @@ async def user_auth(
         data={"sub": user.username},
         expire_delta=access_token_expires
     )
-    return {"access_token": access_token, "token_type": "bearer"}
+    return Token(access_token=access_token)
 
 
-@router_user.get("/me")
+@router_user.get("/me", response_model=UserInfo)
 async def get_me(
     current_user: Annotated[UserInfo, Depends(get_current_user)]
 ):
-    return current_user
+    return UserInfo(**current_user.__dict__)
